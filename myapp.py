@@ -1,12 +1,19 @@
-from ariadne import QueryType, graphql_sync, make_executable_schema
+from ariadne import gql, QueryType, graphql_sync, make_executable_schema,MutationType
 from ariadne.constants import PLAYGROUND_HTML
 from flask import Flask, request, jsonify
 
-type_defs = """
+type_defs = gql("""#the gql validate schema and raises error
     type Query {
         hello: String!
+        test(name: String): String!
+        all: [String]!
     }
-"""
+    type Mutation{
+        add(name: String!): String!
+    }
+""")
+
+users = ["Unknown"]
 
 query = QueryType()
 
@@ -18,7 +25,22 @@ def resolve_hello(_, info):
     return "Hello, %s!" % user_agent
 
 
-schema = make_executable_schema(type_defs, query)
+@query.field("test")
+def resolve_test(*_, name=users[-1]):
+    return "Hello, %s" % name
+
+@query.field("all")
+def resolve_all(*_):
+    return users
+
+mutation = MutationType()
+
+@mutation.field("add")
+def resolve_add(_,info,name):
+    users.append(name)
+    return users[-1]
+
+schema = make_executable_schema(type_defs, query, mutation)
 
 app = Flask(__name__)
 
@@ -51,4 +73,4 @@ def graphql_server():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',debug=True)
+    app.run(host='0.0.0.0', debug=True)
