@@ -2,11 +2,13 @@ from ariadne import gql, QueryType, ObjectType, graphql_sync, make_executable_sc
 from ariadne.constants import PLAYGROUND_HTML
 from flask import Flask, request, jsonify
 
-
+# Load schema
 type_defs = load_schema_from_path("./schema.graphql")
 
-query = ObjectType("Query")
 
+# In-memory data
+
+#student data
 st = [
     {
         'id': 1,
@@ -14,6 +16,7 @@ st = [
     }
 ]
 
+#class data
 cl = [
     {
         'id': 273,
@@ -22,6 +25,11 @@ cl = [
     }
 ]
 
+# ================================
+# Define query field
+# ================================
+
+query = ObjectType("Query")
 
 @query.field("hello")
 def resolve_hello(_, info):
@@ -54,6 +62,10 @@ def resolve_classes(obj, info, id):
         if each['id'] == id:
             return each
     return None
+
+# ================================
+# Define mutation field
+# ================================
 
 
 mutation = ObjectType("Mutation")
@@ -98,6 +110,10 @@ def resolve_add(obj, info, sid, cid):
                     return True
             return False
     return False
+
+# ================================
+# Define student field
+# ================================
 
 
 student = ObjectType("Student")
@@ -146,4 +162,5 @@ def graphql_server():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+    app.run(debug=False)
+    #app.run(host='0.0.0.0', debug=True)

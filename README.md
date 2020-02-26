@@ -1,6 +1,159 @@
 # cmpe273-lab3
 Implementation of GraphQL
 
+## Instruction
+
+- The "myapp.py" contains the server implementation
+- The "schema.graphql" contains the schema definition
+- Place these two file in same directory to make the path available
+
+## Result
+
+### Operation of students
+
+- Add a student
+
+```python
+#request
+mutation{
+	student(name: "PC")
+}
+
+#response
+{
+  "data": {
+    "student": true
+  }
+}
+```
+
+- Request all students
+  
+```python
+#request
+{
+  students{
+    id
+    name
+  }
+}
+
+#response
+{
+  "data": {
+    "students": [
+      {
+        "id": 1,
+        "name": "chao"
+      },
+      {
+        "id": 2,
+        "name": "PC"
+      }
+    ]
+  }
+}
+```
+
+### Operation of Class
+
+- Add a class
+
+```python
+#request
+mutation{
+  class(id:272, name:"Software Platform")
+}
+
+#response
+{
+  "data": {
+    "class": true
+  }
+}
+```
+
+- Request all class
+
+```python
+#request
+{
+  classes{
+    id
+    name
+    students{
+      name
+    }
+  }
+}
+
+#response
+{
+  "data": {
+    "classes": [
+      {
+        "id": 273,
+        "name": "Distributed System",
+        "students": []
+      },
+      {
+        "id": 272,
+        "name": "Software Platform",
+        "students": []
+      }
+    ]
+  }
+}
+```
+
+- Add a student into class
+
+```python
+#request
+mutation{
+  add(sid:1,cid:272)
+}
+
+#response
+{
+  "data": {
+    "add": true
+  }
+}
+```
+
+- Request a class
+
+```python
+#request
+{
+  class(id: 272){
+    id
+    name
+    students{
+      id
+      name
+    }
+  }
+}
+
+#response
+{
+  "data": {
+    "class": {
+      "id": 272,
+      "name": "Software Platform",
+      "students": [
+        {
+          "id": 1,
+          "name": "chao"
+        }
+      ]
+    }
+  }
+}
+```
+
 ## Pre-requisites
 
 * Install _Pipenv_
