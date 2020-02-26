@@ -5,7 +5,7 @@ Implementation of GraphQL
 
 - The "myapp.py" contains the server implementation
 - The "schema.graphql" contains the schema definition
-- Place these two file in same directory to make the path available
+- Place these two files in the same directory to make the path available
 
 ## Result
 
